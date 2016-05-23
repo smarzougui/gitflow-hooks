@@ -1,0 +1,4 @@
+#!/bin/sh
+#Exit with Not 0 will abort the commit
+
+exit 1
