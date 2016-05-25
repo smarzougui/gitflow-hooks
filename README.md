@@ -1,4 +1,4 @@
-# gitflow-hooks (AVH Edition)
+# gitflow-hooks
 
 This project helps the team follow the gitflow hooks,
 by adding controls when making merges, pushes... with the available hooks of Git.
