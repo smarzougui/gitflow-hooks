@@ -1,4 +1,8 @@
 #!/bin/sh
 #Exit with Not 0 will abort the commit
 
-exit 0
+
+current_branch= $(git symbolic-ref -q HEAD)
+
+echo $current_branch;
+exit -1
