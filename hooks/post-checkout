@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# The post-checkout hook receives three parameters:
+
+#1 Ref of previous HEAD
+#2 Ref of new HEAD
+#3 Whether this is a file checkout (0) or branch checkout (1)
+
+
+# this is a file checkout – do nothing
+preHEAD=$1                                                                      
+newHEAD=$2                                                                       
+checkoutType=$3                                                                  
+
+ echo 'llllllllllllllllll';
+# echo $preHEAD;
+# echo $newHEAD;
+
+if [ "$3" == "0" ]; then 
+	echo "Checkout a File"
+	exit; 
+fi
+
+if [ "$1" == "$2" ]; then 
+  	#echo "New branch created. (Probably)."  
+  	new_branch_name=$(git symbolic-ref -q HEAD)
+	new_branch_name=${new_branch_name##refs/heads/}
+	#echo "new_branch_name" $new_branch_name;
+
+  	old_branch_name=$(git rev-parse --symbolic-full-name @{-1})
+	old_branch_name=${old_branch_name##refs/heads/}
+	#echo "old_branch_name" $old_branch_name;
+
+	if [[ "$old_branch_name" != "$new_branch_name"  ]]; then
+		
+		# Branching from develop       
+		if [ "$old_branch_name" == "develop" ]; then 
+				if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+|release\/DC-.+) ]]; then
+				    echo "Valid Name !!!" &> /dev/null
+				else
+				    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-"
+				    echo "Returning back to Develop"
+				    git checkout develop
+				    git branch -D $new_branch_name
+				    exit;
+				fi
+		fi	
+
+		# Branching from master
+		if [ "$old_branch_name" == "master" ]; then 
+				if [[ "$new_branch_name" =~ hotfix\/DC-.+ ]]; then
+				    echo "Valid Name !!!" &> /dev/null
+				else
+				    echo "Name of Branch is Invalid, must be: hotfix/DC-xxx,"
+				    echo "Returning back to Master"
+				    git checkout master
+				    git branch -D $new_branch_name
+				    exit;
+				fi
+		fi	
+	else
+		exit;
+	fi
+
+else
+	exit;
+fi
+
+# If not derived from develop or master, bloc the creation of the Branch !!
+
+
+
+
+
+
+# Delete the new created branch and Go back to the last branch
+#git checkout @{-1}          
+
+
+
+
+# # Check if the new Checkout Branch already exists.
+
+# for BRANCH in `git branch --list|sed 's/\*//g'`;
+#   do 
+   
+#    echo $BRANCH;
+
+#     # git checkout $BRANCH
+#     # git fetch
+#     # git branch --set-upstream-to=origin/$BRANCH $BRANCH
+#   done
+# # git checkout master;
+
+
+
+exit 0
