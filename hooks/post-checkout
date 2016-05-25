@@ -12,6 +12,7 @@ preHEAD=$1
 newHEAD=$2                                                                       
 checkoutType=$3                                                                  
 
+ echo 'llllllllllllllllll';
 # echo $preHEAD;
 # echo $newHEAD;
 
