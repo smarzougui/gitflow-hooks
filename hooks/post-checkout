@@ -1,7 +1,4 @@
 #!/bin/bash
-pwd;
-
-source globals.sh
 
 # The post-checkout hook receives three parameters:
 
@@ -12,18 +9,19 @@ source globals.sh
 
 # this is a file checkout – do nothing
 
-
-
 preHEAD=$1                                                                      
 newHEAD=$2                                                                       
 checkoutType=$3                                                                  
+
+
+list=$(git branch --list|sed 's/\*//g');
 
 # echo $preHEAD;
 # echo $newHEAD;
 
 if [ "$3" == "0" ]; then 
 	#This is a checkout of a file.
-	exit; 
+	exit -1; 
 fi
 
 if [ "$1" == "$2" ]; then 
@@ -34,39 +32,77 @@ if [ "$1" == "$2" ]; then
   	old_branch_name=$(git rev-parse --symbolic-full-name @{-1})
 	old_branch_name=${old_branch_name##refs/heads/}
 
+
 	if [[ "$old_branch_name" != "$new_branch_name"  ]]; then
 		
-		# Branching from develop       
-		if [ "$old_branch_name" == "develop" ]; then 
-				if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+|release\/DC-.+) ]]; then
-				    echo "Valid Name !!!" &> /dev/null
-				else
-				    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-"
-				    echo "Returning back to Develop"
-				    git checkout develop
-				    git branch -D $new_branch_name
-				    exit;
-				fi
-		fi	
 
-		# Branching from master
-		if [ "$old_branch_name" == "master" ]; then 
-				if [[ "$new_branch_name" =~ hotfix\/DC-.+ ]]; then
-				    echo "Valid Name !!!" &> /dev/null
-				else
-				    echo "Name of Branch is Invalid, must be: hotfix/DC-xxx,"
-				    echo "Returning back to Master"
-				    git checkout master
-				    git branch -D $new_branch_name
-				    exit;
-				fi
-		fi	
+		case "$old_branch_name" in
+			'develop')
+					if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+|release\/v.+) ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: feature/DC-xxx, bug/DC-, or release/vX.X.X"
+					    echo "Returning back to Develop."
+					    git checkout develop  >/dev/null 2>&1
+					    git branch -D $new_branch_name >/dev/null 2>&1
+					    exit;
+					fi
+				;;
+			'master')
+					if [[ "$new_branch_name" =~ hotfix\/DC-.+ ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: hotfix/DC-xxx"
+					    echo "Returning back to Master."
+					    git checkout master  >/dev/null 2>&1
+					    git branch -D $new_branch_name  >/dev/null 2>&1
+					    exit;
+					fi
+				;;
+
+			feature/DC-*)
+				echo 'Branching from a Feature Branch ? Why Not !'
+					if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+) ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-xxx"
+					    echo "Returning back to original Branch"
+					    git checkout $old_branch_name  >/dev/null 2>&1
+					    git branch -D $new_branch_name >/dev/null 2>&1
+					    exit;
+					fi				
+				;;
+			bug/DC-*)
+				echo 'Branching from a Feature Branch ? Why Not !'
+					if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+) ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-xxx"
+					    echo "Returning back to original Branch"
+					    git checkout $old_branch_name  >/dev/null 2>&1
+					    git branch -D $new_branch_name >/dev/null 2>&1
+					    exit;
+					fi				
+				;;				
+			*)
+				echo "You can't create a new branch from the branch:"  $old_branch_name
+
+				
+				
+				exit -1;
+
+				 #    git branch -D $new_branch_name  >/dev/null 2>&1
+			;;
+		esac
+
+
+
 	else
-		exit;
+		exit 1; #NOK
 	fi
 
 else
-	exit;
+	exit 1; #NOK;
 fi
 
 # If not derived from develop or master, bloc the creation of the Branch !!
