@@ -59,11 +59,11 @@ if [ "$1" == "$2" ]; then
 				fi
 		fi	
 	else
-		exit;
+		exit 1; #NOK
 	fi
 
 else
-	exit;
+	exit 1; #NOK;
 fi
 
 # If not derived from develop or master, bloc the creation of the Branch !!
