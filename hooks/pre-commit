@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #Exit with Not 0 will abort the commit
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -7,10 +7,10 @@ echo $current_branch;
 
 if [ $current_branch = "master" ]; then
 
-echo  "You are on the master branch.
+echo  "[Git Workflow]: You are on the master branch.
 You can't commit directly on the master branch.
 Please check your git workflow for more details";
-exit 1; #OK
+exit 1; #ONK
 
 else
 

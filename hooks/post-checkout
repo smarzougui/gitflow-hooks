@@ -1,4 +1,7 @@
 #!/bin/bash
+pwd;
+
+source globals.sh
 
 # The post-checkout hook receives three parameters:
 
@@ -8,16 +11,18 @@
 
 
 # this is a file checkout – do nothing
+
+
+
 preHEAD=$1                                                                      
 newHEAD=$2                                                                       
 checkoutType=$3                                                                  
 
- echo 'llllllllllllllllll';
 # echo $preHEAD;
 # echo $newHEAD;
 
 if [ "$3" == "0" ]; then 
-	echo "Checkout a File"
+	#This is a checkout of a file.
 	exit; 
 fi
 
@@ -25,11 +30,9 @@ if [ "$1" == "$2" ]; then
   	#echo "New branch created. (Probably)."  
   	new_branch_name=$(git symbolic-ref -q HEAD)
 	new_branch_name=${new_branch_name##refs/heads/}
-	#echo "new_branch_name" $new_branch_name;
 
   	old_branch_name=$(git rev-parse --symbolic-full-name @{-1})
 	old_branch_name=${old_branch_name##refs/heads/}
-	#echo "old_branch_name" $old_branch_name;
 
 	if [[ "$old_branch_name" != "$new_branch_name"  ]]; then
 		
