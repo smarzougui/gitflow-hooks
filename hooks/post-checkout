@@ -10,17 +10,22 @@
 # this is a file checkout – do nothing
 
 
+i=i+1;
+echo $i
 
 preHEAD=$1                                                                      
 newHEAD=$2                                                                       
 checkoutType=$3                                                                  
+
+
+list=$(git branch --list|sed 's/\*//g');
 
 # echo $preHEAD;
 # echo $newHEAD;
 
 if [ "$3" == "0" ]; then 
 	#This is a checkout of a file.
-	exit; 
+	exit -1; 
 fi
 
 if [ "$1" == "$2" ]; then 
@@ -31,10 +36,12 @@ if [ "$1" == "$2" ]; then
   	old_branch_name=$(git rev-parse --symbolic-full-name @{-1})
 	old_branch_name=${old_branch_name##refs/heads/}
 
+
 	if [[ "$old_branch_name" != "$new_branch_name"  ]]; then
 		
-		# Branching from develop       
-		if [ "$old_branch_name" == "develop" ]; then 
+
+		case "$old_branch_name" in
+			'develop')
 				if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+|release\/DC-.+) ]]; then
 				    echo "Valid Name !!!" &> /dev/null
 				else
@@ -44,10 +51,8 @@ if [ "$1" == "$2" ]; then
 				    git branch -D $new_branch_name >/dev/null 2>&1
 				    exit;
 				fi
-		fi	
-
-		# Branching from master
-		if [ "$old_branch_name" == "master" ]; then 
+				;;
+			'master')
 				if [[ "$new_branch_name" =~ hotfix\/DC-.+ ]]; then
 				    echo "Valid Name !!!" &> /dev/null
 				else
@@ -57,7 +62,24 @@ if [ "$1" == "$2" ]; then
 				    git branch -D $new_branch_name  >/dev/null 2>&1
 				    exit;
 				fi
-		fi	
+				;;
+
+			feature\/DC-.+)
+				echo 'Branching from a Feature Branch ?! mmm Why Not !'
+				;;
+			*)
+				echo "You can't create a new branch from the branch:"  $old_branch_name
+
+				
+				
+				exit -1;
+
+				 #    git branch -D $new_branch_name  >/dev/null 2>&1
+			;;
+		esac
+
+
+
 	else
 		exit 1; #NOK
 	fi
