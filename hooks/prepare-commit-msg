@@ -21,31 +21,17 @@
 # still be edited.  This is rarely a good idea.
 
 
-
 #echo "heyy"
 echo '1' $1
 echo '2' $2
 echo '3' $3
 
-exit 0; #NOK
 
 
+if [ $1  = 'develop']; then
+#We are in develop, must only accept Feature Branches.
+	exit 5; #NOK
+fi
 
-echo "# Please include a useful commit message!" > $1
 
-
-
-case "$2,$3" in
-  merge,)
-    /usr/bin/perl -i.bak -ne 's/^/# /, s/^# #/#/ if /^Conflicts/ .. /#/; print' "$1" ;;
-
-# ,|template,)
-#   /usr/bin/perl -i.bak -pe '
-#      print "\n" . `git diff --cached --name-status -r`
-#	 if /^#/ && $first++ == 0' "$1" ;;
-
-  *) ;;
-esac
-
-# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
-# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+exit 0;

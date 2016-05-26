@@ -26,6 +26,8 @@ See the Wiki for up-to-date [Installation Instructions](https://github.com/smarz
 
 
 
+
+
 ## FAQ
 
 * See the [FAQ](http://github.com/smarzougui/gitflow-hooks/wiki/FAQ) section
