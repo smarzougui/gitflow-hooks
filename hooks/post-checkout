@@ -9,10 +9,6 @@
 
 # this is a file checkout – do nothing
 
-
-i=i+1;
-echo $i
-
 preHEAD=$1                                                                      
 newHEAD=$2                                                                       
 checkoutType=$3                                                                  
@@ -42,31 +38,52 @@ if [ "$1" == "$2" ]; then
 
 		case "$old_branch_name" in
 			'develop')
-				if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+|release\/DC-.+) ]]; then
-				    echo "Valid Name !!!" &> /dev/null
-				else
-				    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-"
-				    echo "Returning back to Develop."
-				    git checkout develop  >/dev/null 2>&1
-				    git branch -D $new_branch_name >/dev/null 2>&1
-				    exit;
-				fi
+					if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+|release\/v.+) ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: feature/DC-xxx, bug/DC-, or release/vX.X.X"
+					    echo "Returning back to Develop."
+					    git checkout develop  >/dev/null 2>&1
+					    git branch -D $new_branch_name >/dev/null 2>&1
+					    exit;
+					fi
 				;;
 			'master')
-				if [[ "$new_branch_name" =~ hotfix\/DC-.+ ]]; then
-				    echo "Valid Name !!!" &> /dev/null
-				else
-				    echo "Name of Branch is Invalid, must be: hotfix/DC-xxx,"
-				    echo "Returning back to Master."
-				    git checkout master  >/dev/null 2>&1
-				    git branch -D $new_branch_name  >/dev/null 2>&1
-				    exit;
-				fi
+					if [[ "$new_branch_name" =~ hotfix\/DC-.+ ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: hotfix/DC-xxx"
+					    echo "Returning back to Master."
+					    git checkout master  >/dev/null 2>&1
+					    git branch -D $new_branch_name  >/dev/null 2>&1
+					    exit;
+					fi
 				;;
 
 			feature/DC-*)
-				echo 'Branching from a Feature Branch ?! mmm Why Not !'
+				echo 'Branching from a Feature Branch ? Why Not !'
+					if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+) ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-xxx"
+					    echo "Returning back to original Branch"
+					    git checkout $old_branch_name  >/dev/null 2>&1
+					    git branch -D $new_branch_name >/dev/null 2>&1
+					    exit;
+					fi				
 				;;
+			bug/DC-*)
+				echo 'Branching from a Feature Branch ? Why Not !'
+					if [[ "$new_branch_name" =~ (feature\/DC-.+|bug\/DC-.+) ]]; then
+					    echo "Valid Name !!!" &> /dev/null
+					else
+					    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-xxx"
+					    echo "Returning back to original Branch"
+					    git checkout $old_branch_name  >/dev/null 2>&1
+					    git branch -D $new_branch_name >/dev/null 2>&1
+					    exit;
+					fi				
+				;;				
 			*)
 				echo "You can't create a new branch from the branch:"  $old_branch_name
 
