@@ -8,6 +8,7 @@ by adding controls when making merges, pushes... with the available hooks of Git
 
 
 
+
 For the best introduction to get started with `gitflow`, please read Jeff
 Kreeftmeijer's blog post:
 
