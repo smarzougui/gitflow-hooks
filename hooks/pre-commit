@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #Exit with Not 0 will abort the commit
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
