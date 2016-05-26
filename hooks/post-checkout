@@ -1,7 +1,4 @@
 #!/bin/bash
-pwd;
-
-source globals.sh
 
 # The post-checkout hook receives three parameters:
 
@@ -42,9 +39,9 @@ if [ "$1" == "$2" ]; then
 				    echo "Valid Name !!!" &> /dev/null
 				else
 				    echo "Name of Branch is Invalid, must be: feature/DC-xxx, or bug/DC-"
-				    echo "Returning back to Develop"
-				    git checkout develop
-				    git branch -D $new_branch_name
+				    echo "Returning back to Develop."
+				    git checkout develop  >/dev/null 2>&1
+				    git branch -D $new_branch_name >/dev/null 2>&1
 				    exit;
 				fi
 		fi	
@@ -55,9 +52,9 @@ if [ "$1" == "$2" ]; then
 				    echo "Valid Name !!!" &> /dev/null
 				else
 				    echo "Name of Branch is Invalid, must be: hotfix/DC-xxx,"
-				    echo "Returning back to Master"
-				    git checkout master
-				    git branch -D $new_branch_name
+				    echo "Returning back to Master."
+				    git checkout master  >/dev/null 2>&1
+				    git branch -D $new_branch_name  >/dev/null 2>&1
 				    exit;
 				fi
 		fi	
