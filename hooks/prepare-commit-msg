@@ -28,7 +28,7 @@ echo '3' $3
 
 
 
-if [ $1  = 'develop']; then
+if [ $1  = 'develop' ]; then
 #We are in develop, must only accept Feature Branches.
 	exit 5; #NOK
 fi
