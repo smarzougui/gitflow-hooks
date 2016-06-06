@@ -85,8 +85,10 @@ if [ "$1" == "$2" ]; then
 					fi				
 				;;				
 			*)
-				echo "You can't create a new branch from the branch:"  $old_branch_name
-
+						echo "You can't create a new branch from the branch:"  $old_branch_name
+		 				# echo "Returning back to original Branch"
+					  #   git checkout $old_branch_name  >/dev/null 2>&1
+					  #   git branch -D $new_branch_name >/dev/null 2>&1
 				
 				
 				exit -1;
